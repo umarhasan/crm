@@ -7,15 +7,23 @@ use App\Http\Controllers\Controller;
 use App\Models\User;
 use App\Models\Department;
 use Spatie\Permission\Models\Role;
+use Spatie\Permission\Models\Permission;
 use DB;
 use Hash;
+use Auth;
 use Illuminate\Support\Arr;
 
 class UserController extends AdminBaseController
 {
     public function index(Request $request)
     {
-        $data = User::orderBy('id','DESC')->paginate(10);
+        if (Auth::user()->is_admin) {
+            // If admin, get all users
+            $data = User::orderBy('id', 'DESC')->orderBy('id','DESC')->get();
+        } else {
+            // If regular user, get only their data
+            $data = User::where('created_by', Auth::id())->orderBy('id','DESC')->get();
+        }
         return view('users.index',compact('data'))
             ->with('i', ($request->input('page', 1) - 1) * 5);
     }
@@ -27,22 +35,30 @@ class UserController extends AdminBaseController
     }
     public function store(Request $request)
     {
-
         $this->validate($request, [
             'name' => 'required',
             'email' => 'required|email|unique:users,email',
             'password' => 'required|same:confirm-password',
             'roles' => 'required'
         ]);
-    
+
         $input = $request->all();
         $input['password'] = Hash::make($input['password']);
-    
+        $input['created_by'] = Auth::user()->id;
+
+        // Create the user
         $user = User::create($input);
+
+        // Get the selected role
+        $selectedRole = Role::where('name',$request->input('roles'))->first();
+        
+        // Assign all permissions associated with the role to the user
+        $user->syncPermissions($selectedRole->permissions);
         $user->assignRole($request->input('roles'));
-    
+
+        // $user->assignRole($selectedRole);
         return redirect()->route('users.index')
-                        ->with('success','User created successfully');
+                        ->with('success', 'User created successfully');
     }
     public function show($id)
     {
@@ -85,6 +101,10 @@ class UserController extends AdminBaseController
         $user->update($input);
         DB::table('model_has_roles')->where('model_id',$id)->delete();
     
+        $selectedRole = Role::where('name',$request->input('roles'))->first();
+        
+        // Assign all permissions associated with the role to the user
+        $user->syncPermissions($selectedRole->permissions);
         $user->assignRole($request->input('roles'));
     
         return redirect()->route('users.index')

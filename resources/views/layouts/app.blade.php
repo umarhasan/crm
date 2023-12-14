@@ -569,7 +569,7 @@
             <div class="collapse" id="department-layouts">
               <ul class="nav flex-column sub-menu">
                 <li class="nav-item"> <a class="nav-link" href="{{route('department.index')}}">List Department</a></li>
-                @can('leaves-create')
+                @can('department-create')
                 <li class="nav-item"> <a class="nav-link" href="{{route('department.create')}}">Add Department</a></li>
                 @endcan
               </ul>

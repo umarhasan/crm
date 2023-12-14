@@ -44,7 +44,7 @@
                 <!-- <a class="btn btn-success" href="{{ route('roles.create') }}"> Create New Role</a> -->
                 </div>
               <div class="card-body">
-                <table id="example1" class="table table-bordered table-striped">
+              <table id="order-listing" class="table dataTable no-footer" role="grid" aria-describedby="order-listing_info">
                   <thead>
                   <tr>
                     <th>S.No</th>
@@ -61,25 +61,22 @@
                   <tr>
                       <td>{{ $key+1 }}</td>
                       <td>{{ $permission->name }}</td>
-                       <td>
-                      <div class="form-group">
-                        <div class="custom-control custom-switch custom-switch-off-danger custom-switch-on-success">
-                        @can('permission-edit')  
-                        <a class="btn btn-primary" href="{{ route('permission.edit',$permission->id) }}"><i class="fa fa-edit"></i></a>
-                        @endcan
-                        @can('permission-delete')  
-                        <form method="post" action="{{route('permission.destroy',$permission->id)}}">
-                          @csrf
-                          @method('delete')
-                          <button type="submit" onclick="return confirm('Are You Sure Want To Delete This.??')" type="button" class="btn btn-danger"><i class="fa fa-trash"></i></button>
-                        </form>
-                        @endcan
-                        </div>
-                      </div>
-                    </td>
                       <td>
-                          
-                      </td>
+                            <div class="btn-group">
+                              @can('permission-edit')
+                              <a class="btn btn-primary" href="{{ route('permission.edit',$permission->id) }}"><i class="fa fa-edit"></i></a>    
+                              @endcan
+                              @can('permission-delete')  
+                              <form method="post" action="{{route('permission.destroy',$permission->id)}}">
+                                @csrf
+                                @method('delete')
+                                <button type="submit" onclick="return confirm('Are You Sure Want To Delete This.??')" type="button" class="btn btn-danger"><i class="fa fa-trash"></i></button>
+                              </form>
+                              @endcan
+                            </div>
+                          </td>
+                       
+                      
                   </tr>
                   @endforeach
                   @endif

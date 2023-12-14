@@ -57,11 +57,11 @@
                           <div class="form-group">
                             <strong>Department:</strong>
                             <select name="department_id" id="" class="form-control">
-                              <option value="" disabled>::select departmemt::</option>
+                              <!-- <option value="" disabled>::select departmemt::</option>
                               @foreach($departments as $department)
                                 <option value="{{$department->id}}" {{ ( $department->id == $user->department_id) ? 'selected' : null }} >{{$department->departments}}</option>
                               @endforeach
-                            </select>
+                            </select> -->
                           </div>
                         </div>
                         <div class="col-xs-12 col-sm-12 col-md-12">

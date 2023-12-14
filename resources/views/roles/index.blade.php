@@ -44,7 +44,7 @@
                 <!-- <a class="btn btn-success" href="{{ route('roles.create') }}"> Create New Role</a> -->
                 </div>
               <div class="card-body">
-                <table id="example1" class="table table-bordered table-striped">
+              <table id="order-listing" class="table dataTable no-footer" role="grid" aria-describedby="order-listing_info">
                   <thead>
                   <tr>
                     <th>S.No</th>
